@@ -1,5 +1,5 @@
 import { BarChart3, ClipboardCheck, FileText, LayoutDashboard, RefreshCw, Search, Sparkles } from 'lucide-react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAppStore } from '../store/AppStore'
 
 const pageTitles: Record<string, string> = {
@@ -20,8 +20,8 @@ export function Layout() {
         <NavLink to="/" end><LayoutDashboard size={18} />经营概览</NavLink>
         <NavLink to="/evaluation"><BarChart3 size={18} />效果评测</NavLink>
         <p className="nav-label">快捷入口</p>
-        <a href="/#recent"><ClipboardCheck size={18} />异常工单</a>
-        <a href="/#sop-library"><FileText size={18} />SOP 资产</a>
+        <Link to="/?section=recent"><ClipboardCheck size={18} />异常工单</Link>
+        <Link to="/?section=sop-library"><FileText size={18} />SOP 资产</Link>
       </nav>
       <div className="sidebar-foot">
         <div className="ai-status"><span className="status-dot" /><div><strong>模拟 AI 已启用</strong><small>离线演示模式</small></div></div>
