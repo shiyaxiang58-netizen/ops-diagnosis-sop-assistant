@@ -1,6 +1,6 @@
 import { AlertTriangle, ArrowRight, CheckCircle2, ClipboardPlus, Clock3, FileCheck2, Plus, TrendingUp, X } from 'lucide-react'
-import { useMemo, useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Badge, categoryColor, StatusBadge } from '../components/Ui'
 import { useAppStore } from '../store/AppStore'
 import { categories, type Category } from '../types'
@@ -11,12 +11,19 @@ export function Dashboard() {
   const [showCreate, setShowCreate] = useState(false)
   const [metricDetail, setMetricDetail] = useState<'tickets' | 'pending' | 'sops' | 'evaluation' | null>(null)
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const targetSection = searchParams.get('section')
   const agreement = classificationAgreement(evaluations)
   const pending = tickets.filter((ticket) => ticket.status === '待确认' || ticket.status === '待分析').length
   const published = sops.filter((sop) => sop.status === '已发布').length
   const coverage = Math.round((new Set(sops.map((sop) => sop.ticketId)).size / tickets.length) * 100)
   const distribution = useMemo(() => categories.map((category) => ({ category, count: tickets.filter((ticket) => ticket.category === category).length })), [tickets])
   const recent = [...tickets].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 6)
+
+  useEffect(() => {
+    if (targetSection !== 'recent' && targetSection !== 'sop-library') return
+    requestAnimationFrame(() => document.getElementById(targetSection)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }, [targetSection])
 
   function submitTicket(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
